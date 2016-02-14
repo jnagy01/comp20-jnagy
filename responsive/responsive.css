@@ -1,0 +1,27 @@
+
+.software {
+	background-image: url(software.png);
+	height: 240px;
+	width: 128px;
+	display: inline-block;
+}
+
+
+
+@media (min-width: 1201px) {
+	.software {
+		background-position: 0px 0px;
+	}
+}
+
+@media (min-width: 1101px) and (max-width: 1200px) {
+	.software {
+		background-position: -128px 0px;
+	}
+}
+
+@media (min-width: 1000px) and (max-width: 1101px) {
+	.software {
+		background-position: -256px 0px;
+	}
+}
