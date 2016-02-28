@@ -1,0 +1,20 @@
+/* style sheet for my_old_kentucky_home */
+
+#title {
+	font-family: Georgia;
+	font-size: 21px;
+}
+
+#music_video {
+	width: 40%;
+	height: auto;
+}
+
+#lyrics {
+	font-family: Georgia;
+	font-size: 18px;
+}
+
+body {
+	text-align: center;
+}
