@@ -17,7 +17,13 @@
 	var lyrics = document.getElementById("lyrics");
 
 	music_video.addEventListener("timeupdate", function() {
-		if (music_video.currentTime > 8 && music_video.currentTime < 15) {
+		if(music_video.currentTime > 1 && music_video.currentTime < 4) {
+			lyrics.innerHTML = '<p> <img class = "pictures" src="kyderby.jpg" alt="Horse Racing"> </p>';
+		}
+		else if(music_video.currentTime > 4 && music_video.currentTime < 8) {
+			lyrics.innerHTML = '<p> <img class = "pictures" src="horsesracing.jpg" alt="Horse Racing"> </p>';
+		}
+		else if (music_video.currentTime > 8 && music_video.currentTime < 15) {
 			lyrics.innerHTML = "<p>The sun shines bright in My Old Kentucky Home,</p>";
 		} 
 		else if (music_video.currentTime > 15 && music_video.currentTime < 21.5) {
