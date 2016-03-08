@@ -1,1 +1,12 @@
-/* Your CSS here... */
+h1 {
+	font-family: Georgia;
+	font-size: 18px;
+}
+
+p {
+	font-family: Georgia;
+	font-size: 16px;
+	border-radius: 10px;
+	background-color: #6bb8ff;
+	padding: 3px;
+}

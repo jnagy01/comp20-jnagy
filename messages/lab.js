@@ -1,17 +1,17 @@
-// Your JavaScript goes here...
+request = new XMLHttpRequest();
+
 function parse() {
-	request = new XMLHttpRequest();
 
 	request.open("GET", "data.json", true);
 
 	request.onreadystatechange = function () {
-		if(request.readyState == 4){
+		if(request.readyState == 4 && request.status == 200){
 			result = "";
 			raw = request.responseText;
 			message = JSON.parse(raw);
-			elem = getElementById("messages");
+			elem = document.getElementById("messages");
 			for(i=0; i<message.length; i++){
-				result += "<p> message["i+1"]["content"] + " " message[i]["i+1"] </p>"
+				result += "<p>" + message[i]["content"] + " " + message[i]["username"] + "</p>";
 			}
 			elem.innerHTML = result;
 		}
