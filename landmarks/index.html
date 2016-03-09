@@ -4,17 +4,69 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Messages</title>
+	<title>Historic Landmarks</title>
+	<meta name="viewport" content="initial-scale=1.0">
+	<link rel="stylesheet" href="style.css" type="text/css" />
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
 	<script>
+		var myLat = 0;
+		var myLng = 0;
+		var request =  new XMLHttpRequest();
+		var myLocation = new google.maps.LatLng(myLat, myLng);
+		var map;
+		var marker;
+		var infoWindow = new google.maps.InfoWindo();
+		var mapOptions = {
+			zoom = 13,
+			center = myLocation;
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
 
+		function initMap()
+		{
+			map = new google.maps.Map(document.getElementById("map"), mapOptions);
+			getMyLocation();
+		}
+
+		function getMyLocation()
+		{
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					myLat = position.coords.latitude;
+					myLng = position.coords.longitude;
+					renderMap();
+				}
+			}
+			else {
+				alert("Geolocation is not supported by your web browser.")
+			}
+		}
+
+		function renderMap()
+		{
+			myLocation = new google.maps.LatLng(myLat, myLng);
+			map.panTo(myLocation); //got to self
+
+			//create marker
+			marker = new google.maps.Market({
+				position: myLocation,
+				title: "Here I Am!"
+			});
+			marker.setMap(map);
+
+			//open info window
+			google.maps.event.addListener(marker, 'click', function(){
+				infoWindow.setContent(marker.title);
+				infoWindow.open(map, marker);
+			});
+		}
 
 	</script>
-	<link rel="stylesheet" href="style.css" type="text/css" />
+
 </head>
 
-<body onload="find_location()">
-	<h1>Messages</h1>
-	<div id="messages"></div>
+<body onload="initMap()">
+	<div id="map"></div>
 </body>
 
 </html>
