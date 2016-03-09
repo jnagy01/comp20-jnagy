@@ -65,7 +65,37 @@ req.onreadystatechange(function(){
 	{
 		result = "";
 		raw = request.responseText;
-		message = JSON.parse(raw);
+		locations = JSON.parse(raw);
+		for(int i=0; i<raw.people.length; i++) {
+			person_location = new google.maps.LatLng(locations.people[i].lat, locations.people[i].lng);
+			person_marker = new google.maps.Marker({
+				position: person_location,
+				title: locations.people[i].login,
+				icon: 'person.png'
+			});
+			person_marker.setMap(map);
+
+			google.maps.event.addListener(person_marker, 'click', function(){
+			infoWindow.setContent(marker.title);
+			infoWindow.open(map, person_marker);
+			});
+		}
+
+		/*for(int i=0; i<raw.landmarks.length; i++) {
+			landmark_location = new google.maps.LatLng(locations.landmarks[i].lat, locations.landmarks[i].lng);
+			landmark_marker = new google.maps.Marker({
+				position: person_location,
+				title: locations.Location_Name[i].login,
+				icon: 'person.png'
+			});
+			person_marker.setMap(map);
+
+			google.maps.event.addListener(person_marker, 'click', function(){
+			infoWindow.setContent(marker.title);
+			infoWindow.open(map, person_marker);
+			});*/
+		}
+
 		//create more markers and loop through to update their infoWindows
 
 	}
