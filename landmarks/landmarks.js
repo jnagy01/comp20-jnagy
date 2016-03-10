@@ -70,39 +70,32 @@ function addPeopleLandmarks(){
 	var request = new XMLHttpRequest();
 	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	var personInfo = new google.maps.InfoWindow();
 
 	request.onreadystatechange = function() {
 		if(request.readyState == 4 && request.status == 200)
 		{
 			raw = request.responseText;
 			locations = JSON.parse(raw);
-			console.log(locations); //remove after
 			for(i=0; i<locations["people"].length; i++) {
 				person_location = new google.maps.LatLng(locations["people"][i]["lat"], locations["people"][i]["lng"]);
 				person_marker = new google.maps.Marker({
 					position: person_location,
 					title: locations["people"][i]["login"],
-					icon: person_icon
+					icon: person_icon,
+					content: "<div> Name: "+locations["people"][i]["login"]+"</div>"
 				});
-				person_marker.setMap(map);
 
-				/*google.maps.event.addListener(person_marker, 'click', function(){
-				infoWindow.setContent(person_marker.title);
-				infoWindow.open(map, person_marker);
-				});*/
-			}
-			/*for(i=0; i<locations["properties"].length; i++) {
-				landmark_location = new google.maps.LatLng(locations["people"][i]["lat"], locations["people"][i]["lng"]);
-				land_marker = new google.maps.Marker({
-					position: person_location,
-					title: locations["people"][i]["login"],
-					icon: person_icon
+				person_marker.setMap(map);
+				google.maps.event.addListener(person_marker, 'click', function(){
+				personInfo.setContent(this.content);
+				personInfo.open(map, this);
 				});
-				person_marker.setMap(map);*/ //have to go through details to get long and lat
+			}
+
 		}
 		};
 		request.send("login=KIRSTEN_MELTON&lat="+myLat+"&lng="+myLng);
 };
 
-			//create more markers and loop through to update their infoWindows
 
