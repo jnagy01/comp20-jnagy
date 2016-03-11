@@ -14,6 +14,17 @@ var person_icon = {
     		url: "person.png",
     		scaledSize: new google.maps.Size(50, 50)
 };
+var landmark_icon = {
+	url: "landmark.png",
+	scaledSize: new google.maps.Size(30, 30)
+};
+
+//var minLat = 0;
+//var minLng = 0;
+var landLat = 0;
+var landLng = 0;
+//var minDist = 1000000000; //arbitarily large
+var dist = 0;
 
 function initMap()
 {
@@ -40,62 +51,119 @@ function renderMap()
 	myLocation = new google.maps.LatLng(myLat, myLng);
 	map.panTo(myLocation); //got to self
 
-	//create marker
-	marker = new google.maps.Marker({
-		position: myLocation,
-		title: "Here I Am!"
-	});
-	marker.setMap(map);
-
-	//open info window
-	google.maps.event.addListener(marker, 'click', function(){
-		infoWindow.setContent(marker.title);
-		infoWindow.open(map, marker);
-	});
-
 	addPeopleLandmarks();
 }
 
-function addPeopleLandmarks(){
-
-	person_icon = {
-    	url: "person.png",
-    	scaledSize: new google.maps.Size(30, 30)
-    };
-    landmark_icon = {
-    	url: "landmark.png",
-    	scaledSize: new google.maps.Size(30, 30)
-    };
-
+function addPeopleLandmarks()
+{
 	var request = new XMLHttpRequest();
 	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	var personInfo = new google.maps.InfoWindow();
 
 	request.onreadystatechange = function() {
 		if(request.readyState == 4 && request.status == 200)
 		{
 			raw = request.responseText;
 			locations = JSON.parse(raw);
-			for(i=0; i<locations["people"].length; i++) {
+
+			for(i=0; i<locations["people"].length; i++) { //other students
 				person_location = new google.maps.LatLng(locations["people"][i]["lat"], locations["people"][i]["lng"]);
 				person_marker = new google.maps.Marker({
 					position: person_location,
 					title: locations["people"][i]["login"],
 					icon: person_icon,
-					content: "<div> Name: "+locations["people"][i]["login"]+"</div>"
+					content: "<p>"+locations["people"][i]["login"]+"</p>"
 				});
 
 				person_marker.setMap(map);
 				google.maps.event.addListener(person_marker, 'click', function(){
-				personInfo.setContent(this.content);
-				personInfo.open(map, this);
+					infoWindow.setContent(this.content);
+					infoWindow.open(map, this);
 				});
+			}
+			
+			for(i=0; i<locations["landmarks"].length; i++) { //landmarks
+				landLat = locations["landmarks"][i]["geometry"]["coordinates"][1];
+				landLng = locations["landmarks"][i]["geometry"]["coordinates"][0];
+				landmark_location = new google.maps.LatLng(landLat, landLng);
+				landmark_marker = new google.maps.Marker({
+					position: landmark_location,
+					title: locations["landmarks"][i]["properties"]["Location_Name"],
+					icon: landmark_icon,
+					content: "<p>"+locations["landmarks"][i]["properties"]["Details"]+"</p>"
+				});
+
+				landmark_marker.setMap(map);
+				google.maps.event.addListener(landmark_marker, 'click', function(){
+					infoWindow.setContent(this.content);
+					infoWindow.open(map, this);
+				});
+
+				if(i == 0) {
+					computeDistance();
+					drawPolyline();
+					//create marker
+					marker = new google.maps.Marker({
+						position: myLocation,
+						title: "KIRSTEN_MELTON",
+						content: "<p>KIRSTEN_MELTON<br>Closest Landmark: "+landmark_marker.title+"<br>Distance Away to Landmark: "+dist+" km</p>"
+					});
+					marker.setMap(map);
+
+					//open info window --- fix to make one for whole page
+					google.maps.event.addListener(marker, 'click', function(){
+						infoWindow.setContent(this.content);
+						infoWindow.open(map, this);
+					});
+				}
 			}
 
 		}
-		};
+	};
 		request.send("login=KIRSTEN_MELTON&lat="+myLat+"&lng="+myLng);
 };
+
+function computeDistance() 
+{
+	//Haversine Formula
+	Number.prototype.toRad = function() {
+   return this * Math.PI / 180;
+	}
+
+	var lat2 = myLat; 
+	var lon2 = myLng; 
+	var lat1 = landLat; 
+	var lon1 = landLng; 
+
+	var R = 6371; // km 
+	//has a problem with the .toRad() method below.
+	var x1 = lat2-lat1;
+	var dLat = x1.toRad();  
+	var x2 = lon2-lon1;
+	var dLon = x2.toRad();  
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+	                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+	                Math.sin(dLon/2) * Math.sin(dLon/2);  
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c; 
+
+	dist = d;
+}
+
+function drawPolyline() 
+{
+	var polyCoord = [
+		{lat: myLat, lng: myLng},
+		{lat: landLat, lng: landLng}
+	];
+	var polyline = new google.maps.Polyline({
+		path: polyCoord,
+		geodesic: true,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeigth: 2
+	});
+	polyline.setMap(map);
+}
 
 
