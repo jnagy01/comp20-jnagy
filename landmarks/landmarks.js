@@ -6,24 +6,21 @@ var map;
 var marker;
 var infoWindow = new google.maps.InfoWindow();
 var mapOptions = {
-	zoom: 13,
+	zoom: 15,
 	center: myLocation,
 	mapTypeId: google.maps.MapTypeId.ROADMAP
 };
 var person_icon = {
     		url: "person.png",
-    		scaledSize: new google.maps.Size(50, 50)
+    		scaledSize: new google.maps.Size(30, 30)
 };
 var landmark_icon = {
 	url: "landmark.png",
 	scaledSize: new google.maps.Size(30, 30)
 };
 
-//var minLat = 0;
-//var minLng = 0;
 var landLat = 0;
 var landLng = 0;
-//var minDist = 1000000000; //arbitarily large
 var dist = 0;
 
 function initMap()
@@ -67,7 +64,8 @@ function addPeopleLandmarks()
 			locations = JSON.parse(raw);
 
 			for(i=0; i<locations["people"].length; i++) { //other students
-				person_location = new google.maps.LatLng(locations["people"][i]["lat"], locations["people"][i]["lng"]);
+				person_location = new google.maps.LatLng(locations["people"][i]["lat"],
+								 locations["people"][i]["lng"]);	
 				person_marker = new google.maps.Marker({
 					position: person_location,
 					title: locations["people"][i]["login"],
@@ -99,18 +97,17 @@ function addPeopleLandmarks()
 					infoWindow.open(map, this);
 				});
 
-				if(i == 0) {
-					computeDistance();
+				if(i == 0) { //the first land mark is the closest
 					drawPolyline();
-					//create marker
+					//create marker for self with closest landmark
 					marker = new google.maps.Marker({
 						position: myLocation,
 						title: "KIRSTEN_MELTON",
-						content: "<p>KIRSTEN_MELTON<br>Closest Landmark: "+landmark_marker.title+"<br>Distance Away to Landmark: "+dist+" km</p>"
+						content: "<p>KIRSTEN_MELTON<br>Closest Landmark: "+landmark_marker.title+
+								"<br>Distance Away to Landmark: "+dist+" mi</p>"
 					});
 					marker.setMap(map);
 
-					//open info window --- fix to make one for whole page
 					google.maps.event.addListener(marker, 'click', function(){
 						infoWindow.setContent(this.content);
 						infoWindow.open(map, this);
@@ -136,7 +133,6 @@ function computeDistance()
 	var lon1 = landLng; 
 
 	var R = 6371; // km 
-	//has a problem with the .toRad() method below.
 	var x1 = lat2-lat1;
 	var dLat = x1.toRad();  
 	var x2 = lon2-lon1;
@@ -147,7 +143,7 @@ function computeDistance()
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c; 
 
-	dist = d;
+	dist = d*0.621371; //convert to miles
 }
 
 function drawPolyline() 
