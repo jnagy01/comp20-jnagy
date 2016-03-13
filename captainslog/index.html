@@ -7,15 +7,26 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script>
 		$(document).ready(function(){
+			reload();
 			$('#msg').keypress(function(e){
 				var key_pressed = e.which;
 				if(key_pressed == 13) { //enter key
-					date = new Date();
-					$('#log').html('<p> '+date.toUTCString()+' - '+$('#msg').val()+' </p>');
+					var date = new Date();
+					localStorage.setItem(date.toUTCString(), $('#msg').val());
+					reload();
 					$('#msg').val('');
 				}
 			});
 		});
+
+		function reload(output)
+		{
+			var output = '';
+			for( key in localStorage) {
+				output = '<p>'+key+' - '+localStorage[key]+'</p>' + output;
+			}
+			$('#log').html(output);
+		}
 	</script>
 </head>
 
