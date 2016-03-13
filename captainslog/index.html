@@ -6,7 +6,15 @@
 	<title>Captain's Log</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script>
-	  // Your work will be done here...
+		$(document).ready(function(){
+			$('#msg').keypress(function(e){
+				var key_pressed = e.which;
+				if(key_pressed == 13) {//enter key
+					$('#log').html('<p> '+ $('#msg').val()+' </p>');
+					$('#msg').val('');
+				}
+			});
+		});
 	</script>
 </head>
 
