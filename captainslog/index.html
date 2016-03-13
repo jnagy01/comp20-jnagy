@@ -9,8 +9,9 @@
 		$(document).ready(function(){
 			$('#msg').keypress(function(e){
 				var key_pressed = e.which;
-				if(key_pressed == 13) {//enter key
-					$('#log').html('<p> '+ $('#msg').val()+' </p>');
+				if(key_pressed == 13) { //enter key
+					date = new Date();
+					$('#log').html('<p> '+date.toUTCString()+' - '+$('#msg').val()+' </p>');
 					$('#msg').val('');
 				}
 			});
