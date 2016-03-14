@@ -19,8 +19,8 @@ var landmark_icon = {
 	scaledSize: new google.maps.Size(30, 30)
 };
 
-var landLat = 0;
-var landLng = 0;
+var objLat = 0;
+var objLng = 0;
 var dist = 0;
 
 function initMap()
@@ -64,13 +64,16 @@ function addPeopleLandmarks()
 			locations = JSON.parse(raw);
 
 			for(i=0; i<locations["people"].length; i++) { //other students
-				person_location = new google.maps.LatLng(locations["people"][i]["lat"],
-								 locations["people"][i]["lng"]);	
+				objLat = locations["people"][i]["lat"];
+				objLng = locations["people"][i]["lng"];
+				person_location = new google.maps.LatLng(objLat, objLng);
+				computeDistance();
 				person_marker = new google.maps.Marker({
 					position: person_location,
 					title: locations["people"][i]["login"],
 					icon: person_icon,
-					content: "<p>"+locations["people"][i]["login"]+"</p>"
+					content: "<p>"+locations["people"][i]["login"]+"<br>Distance from me: "
+								+dist+" mi</p>"
 				});
 
 				person_marker.setMap(map);
@@ -81,9 +84,9 @@ function addPeopleLandmarks()
 			}
 			
 			for(i=0; i<locations["landmarks"].length; i++) { //landmarks
-				landLat = locations["landmarks"][i]["geometry"]["coordinates"][1];
-				landLng = locations["landmarks"][i]["geometry"]["coordinates"][0];
-				landmark_location = new google.maps.LatLng(landLat, landLng);
+				objLat = locations["landmarks"][i]["geometry"]["coordinates"][1];
+				objLng = locations["landmarks"][i]["geometry"]["coordinates"][0];
+				landmark_location = new google.maps.LatLng(objLat, objLng);
 				landmark_marker = new google.maps.Marker({
 					position: landmark_location,
 					title: locations["landmarks"][i]["properties"]["Location_Name"],
@@ -99,6 +102,7 @@ function addPeopleLandmarks()
 
 				if(i == 0) { //the first land mark is the closest
 					drawPolyline();
+					computeDistance();
 					//create marker for self with closest landmark
 					marker = new google.maps.Marker({
 						position: myLocation,
@@ -129,8 +133,8 @@ function computeDistance()
 
 	var lat2 = myLat; 
 	var lon2 = myLng; 
-	var lat1 = landLat; 
-	var lon1 = landLng; 
+	var lat1 = objLat; 
+	var lon1 = objLng; 
 
 	var R = 6371; // km 
 	var x1 = lat2-lat1;
@@ -150,7 +154,7 @@ function drawPolyline()
 {
 	var polyCoord = [
 		{lat: myLat, lng: myLng},
-		{lat: landLat, lng: landLng}
+		{lat: objLat, lng: objLng}
 	];
 	var polyline = new google.maps.Polyline({
 		path: polyCoord,
