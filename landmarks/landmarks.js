@@ -75,12 +75,14 @@ function addPeopleLandmarks()
 					content: "<p>"+locations["people"][i]["login"]+"<br>Distance from me: "
 								+dist+" mi</p>"
 				});
-
-				person_marker.setMap(map);
-				google.maps.event.addListener(person_marker, 'click', function(){
-					infoWindow.setContent(this.content);
-					infoWindow.open(map, this);
-				});
+				
+				if(objLat != myLat && objLng != myLng) {
+					person_marker.setMap(map);
+					google.maps.event.addListener(person_marker, 'click', function(){
+						infoWindow.setContent(this.content);
+						infoWindow.open(map, this);
+					});
+				}
 			}
 			
 			for(i=0; i<locations["landmarks"].length; i++) { //landmarks
