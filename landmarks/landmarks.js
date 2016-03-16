@@ -68,20 +68,22 @@ function addPeopleLandmarks()
 				objLng = locations["people"][i]["lng"];
 				person_location = new google.maps.LatLng(objLat, objLng);
 				computeDistance();
-				person_marker = new google.maps.Marker({
-					position: person_location,
-					title: locations["people"][i]["login"],
-					icon: person_icon,
-					content: "<p>"+locations["people"][i]["login"]+"<br>Distance from me: "
-								+dist+" mi</p>"
-				});
-				
-				if(objLat != myLat && objLng != myLng) {
-					person_marker.setMap(map);
-					google.maps.event.addListener(person_marker, 'click', function(){
-						infoWindow.setContent(this.content);
-						infoWindow.open(map, this);
+				if(dist <= 1) { //only ppl w/i a mile of me
+					person_marker = new google.maps.Marker({
+						position: person_location,
+						title: locations["people"][i]["login"],
+						icon: person_icon,
+						content: "<p>"+locations["people"][i]["login"]+"<br>Distance from me: "
+									+dist+" mi</p>"
 					});
+					
+					if(objLat != myLat && objLng != myLng) {
+						person_marker.setMap(map);
+						google.maps.event.addListener(person_marker, 'click', function(){
+							infoWindow.setContent(this.content);
+							infoWindow.open(map, this);
+						});
+					}
 				}
 			}
 			
@@ -109,7 +111,7 @@ function addPeopleLandmarks()
 					marker = new google.maps.Marker({
 						position: myLocation,
 						title: "KIRSTEN_MELTON",
-						content: "<p>KIRSTEN_MELTON<br>Closest Landmark: "+landmark_marker.title+
+						content: "<p>I am KIRSTEN_MELTON<br>Closest Landmark: "+landmark_marker.title+
 								"<br>Distance Away to Landmark: "+dist+" mi</p>"
 					});
 					marker.setMap(map);
