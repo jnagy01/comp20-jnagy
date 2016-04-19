@@ -54,7 +54,8 @@ function renderMap()
 function addPeopleLandmarks()
 {
 	var request = new XMLHttpRequest();
-	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+	//http://polar-tor-46518.herokuapp.com/sendLocation
+	request.open("POST", "http://polar-tor-46518.herokuapp.com/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 	request.onreadystatechange = function() {
@@ -125,7 +126,9 @@ function addPeopleLandmarks()
 
 		}
 	};
+		//request.send("login=J_NAGY&lat="+myLat+"&lng="+myLng);
 		request.send("login=KIRSTEN_MELTON&lat="+myLat+"&lng="+myLng);
+		//KIRSTEN_MELTON
 };
 
 function computeDistance() 
