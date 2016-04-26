@@ -21,6 +21,53 @@
 		<h2>Abstract of Findings</h2>
 		<p>The vulnerabilites of this web application range from mild to severe, and can render the application unusable. The main source of these flaws stems from too much trust in user input. Instead of trusting the user to input correct data, the application should take active measures to disablize any attempts of malicious user input. Currently, the application has little to no security and only takes precautions against a select few cases of an incorrect login input.</p>
 
+		<h2>Issues Found</h2>
+		<ol>
+			<li><h4>Cross-Site Scripting (XSS)</h4></li>
+			<ul>
+				<li>Affects GET / (home page), but source of vulnerability was in POST /sendLocation</li>
+				<li>High - XSS opens Historic Landmarks to more serious attacks, such as redirecting the webpage to a different site or allowing the attacker to steal data from the users of the site.</li>
+				<li>Data submitted with curl via the POST route /sendLocation is not sanitized (upon inspection after I tried XSS using "black-box" testing method), therefore, javascript was allowed as the value for "login". This login information was stored in the database for this site (mongo), and in the home page this javascript was executed. I used curl to inject an infinte loop of popups.<br>
+				<img src="curl_xss.png" alt="XSS with Curl"/><br><img src="infinitealerts.png" alt="Infinite Alerts"/><br>
+				This infinite loop prevented me from exiting my browser, eventually causing me to have to force quit Chrome. Although my attack was more annoying than harmful, XSS opens Historic Landmarks to more serious attacks, as mentioned above.</li>
+				<li>A simple fix to avoid XSS is to sanitize all user input.<br>
+				<img src="sanitize.png" alt="Sanitize Login"/>
+				</li>
+				<li>I also injected some html into the page via the /sendLocation POST route.<br>
+					<img src="curl_html.png" alt="Infinite Alerts"/><br><img src="puppy.png" alt="Injected HTML"/><br>
+				While also potentially harmful, this is not techinically XSS since no JavaScript is injected into the page. Sanitizing user input will also prevent HTML from being injected into the page.</li>
+			</ul>
+
+			<li><h4>Inputting Bad Data</h4></li>
+			<ul>
+				<li>Affects Assignment 2 rendering the map with user location, other checkins, and landmarks, but but source of vulnerability was in POST /sendLocation.</li>
+				<li>Moderate - did not take down server, but temporarily suspended its full functionality until the database is cleared.</li>
+				<li>In the POST route, my partner only checked to see if the login was null or an empty string, while the lat and lng remained only checked for empty strings.<br>
+					<img src="logicerror.png" alt="Logic Error"/>
+				</li>
+				<li>Using curl, I sent the value for the latitude as a string, and the value of lng to null. I still recieved all of the JSON checkins back, but when I went to render the map using assigment 2, only a few checkins loaded, and none of the landmarks were present. There was also an error in the JavaScript console of "Uncaught Type Error", because the lat and lng were not set to numbers.<br> <img src="curl_baddata.png" alt="Input Bad Data with Curl"/><br><img src="baddata.png" alt="Bad Data Inputed"/>
+				</li>
+				<li>An easy fix would be to also check if lat and lng are not numbers using the not a number function, NaN(lng), and also checking to see if lat and lng are set to null (lat == null).<br> <img src="prevent_baddata.png" alt="If Statement"/>
+				</li>
+			</ul>
+
+			<li><h4>Messing With Mongo</h4></li>
+			<ul>
+				<li>Affects GET /checkins.json</li>
+				<li>High - allowed user to access everyone's location in json, and not just from their username; a big privacy issue. Also, if the user can make queries in the database freely, they can also probably manipulate the iformation in it.</li>
+				<li>In the query string, I queried for anything in the database greater than an empty string. This gave me the JSON with the location, login, id, and timestamp for each person that had checked in, instead of just the checkins with my username.<br><img src="badquery.png" alt="Bad Query Close"/><img src="querystring.png" alt="Bad Query String"/>
+				</li>
+				<li>There was no sanitation of what was given in the query string, therefore the user had complete access of the database. A simple fix would be to sanitize the results of the query string.<br> <img src="sanitizemongo.png" alt="Sanitize Mongo"/>
+				</li>
+			</ul>
+
+			<li><h4>Conclusion<h4></li>
+			<p>Vulnerabilities in with Historic Landmarks range from severe to mild issues, but all can have a significant imact on the site, and in some cases rendering it unusable. The suggestions mentioned will improve the security, but there is still more that could be done to increase security. An authentication system for the /sendLocation POST route, that only allowed specific users to send data would be ideal, making the user input slightly more trustworthy. But you can never trust user input, therefore, the other suggestions above will still be necessary.<p>
+			</ul>
+
+		</ol>
+
+
 
 
 	</body>

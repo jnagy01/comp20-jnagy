@@ -1,0 +1,25 @@
+img {
+	width: 50%;
+	height: auto;
+	padding: 4px;
+}
+
+body {
+	font-family: Georgia;
+}
+
+h4 {
+	font-weight: bold;
+}
+
+h1 {
+	font-weight: bold;
+}
+
+li {
+	margin-right: 5%;
+}
+
+p {
+	margin-right: 5%;
+}
