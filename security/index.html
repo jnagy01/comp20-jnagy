@@ -28,12 +28,12 @@
 				<li><span class="subheading">Affects: </span> GET '/', but the source of the vulnerability is in POST '/sendLocation'</li>
 				<li><span class="subheading">High: </span> XSS opens Historic Landmarks to more serious attacks. These include, but are not limited to: redirecting the webpage to a different site, and  allowing the attacker to steal data from the users of the site.</li>
 				<li>Data submitted with curl via the POST route '/sendLocation' is not sanitized, therefore, javascript was allowed as the value for "login". This login information was stored in the database for this site (mongo), and in the home page this javascript was executed. I used curl to inject an infinte loop of popups.<br>
-				<img src="curl_xss.png" alt="XSS with Curl"/><br><img src="infinitealerts.png" alt="Infinite Alerts"/><br>
+				<img src="pictures/curl_xss.png" alt="XSS with Curl"/><br><img src="pictures/infinitealerts.png" alt="Infinite Alerts"/><br>
 				This infinite loop prevented me from exiting my browser, eventually causing me to have to force quit Chrome. Although my attack was more annoying than harmful, XSS opens Historic Landmarks to more serious attacks, as mentioned above.</li>
 				<li>A simple fix to avoid XSS is to sanitize all user input.<br>
-				<img src="sanitize.png" alt="Sanitize Login"/>
+				<img src="pictures/sanitize.png" alt="Sanitize Login"/>
 				</li>
-				<li>I also injected some html into the page via the '/sendLocation' POST route. While also potentially harmful, this is not techinically XSS since no JavaScript is injected into the page. Sanitizing user input will also prevent HTML from being injected into the page.<br><img src="curl_html.png" alt="Infinite Alerts"/><br><img src="puppy.png" alt="Injected HTML"/><br>
+				<li>I also injected some html into the page via the '/sendLocation' POST route. While also potentially harmful, this is not techinically XSS since no JavaScript is injected into the page. Sanitizing user input will also prevent HTML from being injected into the page.<br><img src="pictures/curl_html.png" alt="Infinite Alerts"/><br><img src="pictures/puppy.png" alt="Injected HTML"/><br>
 				</li>
 			</ul>
 
@@ -41,11 +41,11 @@
 			<ul>
 				<li><span class="subheading">Affects: </span>Assignment 2 rendering the map with user location, other checkins, and landmarks. But, the source of vulnerability is in POST '/sendLocation'.</li>
 				<li><span class="subheading">Moderate: </span> Altough the bad data did not take down server, it temporarily suspends its full functionality until the database is cleared.</li>
-				<li>Before entering login, latitude and longitude information into her database, my partner only checked to see if the login was null or an empty string, while the lat and lng remained only checked for empty strings.<br><img src="logicerror.png" alt="Logic Error"/><br>
+				<li>Before entering login, latitude and longitude information into her database, my partner only checked to see if the login was null or an empty string, while the lat and lng remained only checked for empty strings.<br><img src="pictures/logicerror.png" alt="Logic Error"/><br>
 				</li>
-				<li>Using curl, I sent the value for the latitude as a string, and the value of longitude to null. My bad inputs were still added to the database, and I recieved the JSON with checkin data back. But, when I went to render the map, only a few checkins loaded, and none of the landmarks were present. There was also an error in the JavaScript console of "Uncaught Type Error", because the latitude and longitude were not numbers.<br><img src="curl_baddata.png" alt="Input Bad Data with Curl"/><br><img src="baddata.png" alt="Bad Data Inputed"/>
+				<li>Using curl, I sent the value for the latitude as a string, and the value of longitude to null. My bad inputs were still added to the database, and I recieved the JSON with checkin data back. But, when I went to render the map, only a few checkins loaded, and none of the landmarks were present. There was also an error in the JavaScript console of "Uncaught Type Error", because the latitude and longitude were not numbers.<br><img src="pictures/curl_baddata.png" alt="Input Bad Data with Curl"/><br><img src="pictures/baddata.png" alt="Bad Data Inputed"/>
 				</li>
-				<li>An easy fix would be to also check if lat and lng are not numbers or null, before inserting them into the database. This can be done by using the not a number function, ( NaN() ) , and also checking to see if lat and lng are set to null.<br> <img src="prevent_baddata.png" alt="If Statement"/>
+				<li>An easy fix would be to also check if lat and lng are not numbers or null, before inserting them into the database. This can be done by using the not a number function, ( NaN() ) , and also checking to see if lat and lng are set to null.<br> <img src="pictures/prevent_baddata.png" alt="If Statement"/>
 				</li>
 			</ul>
 
@@ -53,9 +53,9 @@
 			<ul>
 				<li><span class="subheading">Affects: </span> GET '/checkins.json'</li>
 				<li><span class="subheading">High: </span> Allows user to access everyone's location in JSON, and not just from their own username; a big privacy issue. Also, if the user can make queries in the database freely, they can probably manipulate the information in the database as well.<br></li>
-				<li>In the query string, I searched for anything in the database greater than an empty string. This gave me the JSON with the location, login, id, and timestamp for each person that had checked in, instead of just the checkins with my username.<br><img src="badquery.png" alt="Bad Query Close"/><img src="querystring.png" alt="Bad Query String"/><br>
+				<li>In the query string, I searched for anything in the database greater than an empty string. This gave me the JSON with the location, login, id, and timestamp for each person that had checked in, instead of just the checkins with my username.<br><img src="pictures/badquery.png" alt="Bad Query Close"/><img src="pictures/querystring.png" alt="Bad Query String"/><br>
 				</li>
-				<li>There was no sanitation of what was given in the query string, therefore the user had complete access of the database. A simple fix would be to sanitize the results of the query string.<br> <img src="sanitizemongo.png" alt="Sanitize Mongo"/>
+				<li>There was no sanitation of what was given in the query string, therefore the user had complete access of the database. A simple fix would be to sanitize the results of the query string.<br> <img src="pictures/sanitizemongo.png" alt="Sanitize Mongo"/>
 				</li>
 			</ul>
 		</ol>
