@@ -55,7 +55,7 @@ function addPeopleLandmarks()
 {
 	var request = new XMLHttpRequest();
 	//http://polar-tor-46518.herokuapp.com/sendLocation
-	request.open("POST", "http://polar-tor-46518.herokuapp.com/sendLocation", true);
+	request.open("POST", "http://localhost:5000/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 	request.onreadystatechange = function() {
