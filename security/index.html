@@ -13,13 +13,13 @@
 		<p>Jordan Nagy 04/25/16</p>
 
 		<h2>Introduction</h2>
-		<p>This evaluation explores the security and privacy vulnerabilities of my partner's Historic Landmark page and server (Comp 20 Assignments 2 and 3, respecitvely). Their client specified that the historic landmark page will use the Google Maps API to render a map, displaying the user's location and the location of all other checkins to the page. The user's location will then be sent to the server and all of the historic landmarks within a mile will be sent back to the page. The page will then add these landmarks to the map along with the user's location and the other checkins.<br><br>I will conduct testing to evaluate these weaknesses by finding ways in which the application can be exploited to violate privacy or render it unusable.</p>
+		<p>This evaluation explores the security and privacy vulnerabilities of my partner's Historic Landmark page and server (Comp 20 Assignments 2 and 3, respectively). Their client specified that the historic landmark page will use the Google Maps API to render a map, displaying the user's location and the location of all other checkins to the page. The user's location will then be sent to the server and all of the historic landmarks within a mile will be sent back to the page. The page will then add these landmarks to the map along with the user's location and the other checkins.<br><br>I will conduct testing to evaluate these weaknesses by finding ways in which the application can be exploited to violate privacy or render it unusable.</p>
 
 		<h2>Methods</h2>
 		<p>To begin testing, I used the "black-box" method to test my partner's code without reviewing it. Then, after reviewing her code, more logic errors and vulnerabilities were found. Using curl and the url entered in the web browser, I exploited these vulnerabilities.<br><br>Since I ran her assignment locally, I had to make a slight change to connect with mongo locally as well.</p>
 
 		<h2>Abstract of Findings</h2>
-		<p>The vulnerabilites of this web application range from mild to severe; some of them can even render the application unusable. The main source of these flaws stems from too much trust in user input. Instead of trusting the user to input correct data, the application should take active measures to disablize any attempts of malicious user input. Currently, the application has little to no security and only takes precautions against a select few cases of an incorrect login input.</p>
+		<p>The vulnerabilites of this web application range from mild to severe; some of them can even render the application unusable. The main source of these flaws stems from too much trust in user input. Instead of trusting the user to input correct data, the application should take active measures to disable any attempts of malicious user input. Currently, the application has little to no security and only takes precautions against a select few cases of an incorrect login input.</p>
 
 		<h2>Issues Found</h2>
 		<ol>
@@ -33,7 +33,7 @@
 				<li>A simple fix to avoid XSS is to sanitize all user input.<br>
 				<img src="pictures/sanitize.png" alt="Sanitize Login"/>
 				</li>
-				<li>I also injected some html into the page via the '/sendLocation' POST route. While also potentially harmful, this is not techinically XSS since no JavaScript is injected into the page. Sanitizing user input will also prevent HTML from being injected into the page.<br><img src="pictures/curl_html.png" alt="Infinite Alerts"/><br><img src="pictures/puppy.png" alt="Injected HTML"/><br>
+				<li>I also injected some html into the page via the '/sendLocation' POST route. While also potentially harmful, this is not technically XSS since no JavaScript is injected into the page. Sanitizing user input will also prevent HTML from being injected into the page.<br><img src="pictures/curl_html.png" alt="Infinite Alerts"/><br><img src="pictures/puppy.png" alt="Injected HTML"/><br>
 				</li>
 			</ul>
 
@@ -61,7 +61,7 @@
 		</ol>
 
 		<h4>Conclusion</h4>
-		<p>Vulnerabilities in with Historic Landmarks range from severe to mild issues, but all can have a significant imact on the site, and in some cases rendering it unusable. The suggestions mentioned will improve the security, but there is still more that could be done to increase security. An authentication system for the  POST route, '/sendLocation', that only allowed specific users to send data would be ideal, making the user input slightly more trustworthy. But you can never trust user input, therefore, the other suggestions above will still be necessary.</p>
+		<p>Vulnerabilities in Historic Landmarks range from severe to mild issues, but all can have a significant impact on the site, and in some cases rendering it unusable. The suggestions mentioned will improve the security, but there is still more that could be done to increase security. An authentication system for the  POST route, '/sendLocation', that only allowed specific users to send data would be ideal, making the user input slightly more trustworthy. But you can never trust user input, therefore, the other suggestions above will still be necessary.</p>
 
 
 
